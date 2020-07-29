@@ -20,11 +20,9 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "test": "jest test",
-    "pretest": "npm run build"
+    "pretest": "npm run build",
+    "prepublishOnly": "npm run build"
   },
-  "files": [
-    "dist"
-  ],
   "keywords": [
     "tree",
     "array",
