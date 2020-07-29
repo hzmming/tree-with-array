@@ -1,75 +1,177 @@
-# 目前为记录开发过程，而不是使用说明
+# tree-with-array
 
-## Eslint
+Conversion between tree data and array data
 
-```shell
-npm i eslint -D
-npx eslint init
-# windows版的vscode会提示是否使用node_modules中的eslint，是即可。
-```
-
-## Prettier
-
-**.prettierrc**
-
-```javascript
-{
-    // 就喜欢单引号
-    "singleQuote": true,
-    // 箭头函数，能不要括号就不要括号
-    "arrowParens": "avoid",
-    // 就不要逗号
-    "trailingComma": "none"
-}
-```
-
-## BABEL
-
-```javascript
-"modules": false // 不让babel转译es为commonjs，留给rollup做
-```
-
-## JEST
+## Install
 
 ```shell
-# @types/jest用于代码提示
-npm i jest @types/jest -D
+npm i tree-with-array
 ```
 
-```shell
-# 生成配置文件
-npx jest --init
-```
+## Usage
 
-最终修改为
+**arrayToTree**
 
 ```javascript
-module.exports = {
-  collectCoverage: true,
-  coverageDirectory: 'coverage',
-  coveragePathIgnorePatterns: ['/node_modules/', 'test'],
-  testEnvironment: 'node',
-  verbose: true
-};
-```
-
-eslintrc.js 调整
-
-```javascript
-module.exports = {
-  env: {
-    jest: true // 避免测试文件报找不到it或expect。也可以过滤test目录，不做eslint检查
+const { arrayToTree } = require('tree-with-array');
+const list = [
+  {
+    id: '0'
+  },
+  {
+    id: '0-1',
+    parentId: '0'
+  },
+  {
+    id: '0-1-1',
+    parentId: '0-1'
+  },
+  {
+    id: '0-2',
+    parentId: '0'
+  },
+  {
+    id: '1'
   }
-};
+];
+const tree = arrayToTree(list);
+console.log(tree);
+/*
+  [
+    {
+      id: '0',
+      children: [
+        {
+          id: '0-1',
+          parentId: '0',
+          children: [
+            {
+              id: '0-1-1',
+              parentId: '0-1'
+            }
+          ]
+        },
+        {
+          id: '0-2',
+          parentId: '0'
+        }
+      ]
+    },
+    {
+      id: '1'
+    }
+  ];
+*/
 ```
 
-添加执行脚本
-package.json
+**treeToArray**
 
-```json
-{
-  "scripts": {
-    "test": "jest test"
+```javascript
+const { treeToArray } = require('tree-with-array');
+const tree = [
+  {
+    id: '0',
+    children: [
+      {
+        id: '0-1',
+        children: [
+          {
+            id: '0-1-1'
+          }
+        ]
+      },
+      {
+        id: '0-2'
+      }
+    ]
+  },
+  {
+    id: '1'
   }
-}
+];
+const list = treeToArray(tree);
+console.log(list);
+/* 
+  [
+    {
+      id: '0',
+      children: [
+        {
+          id: '0-1',
+          children: [
+            {
+              id: '0-1-1'
+            }
+          ]
+        },
+        {
+          id: '0-2'
+        }
+      ]
+    },
+    {
+      id: '0-1',
+      children: [
+        {
+          id: '0-1-1'
+        }
+      ]
+    },
+    {
+      id: '0-1-1'
+    },
+    {
+      id: '0-2'
+    },
+    {
+      id: '1'
+    }
+  ];
+ */
 ```
+
+## Api
+
+`arrayToTree(list, [options])`
+
+```javascript
+arrayToTree(list, {
+  idKey,
+  pIdKey,
+  // ...
+})
+```
+
+
+
+**options**
+
+| name       | description                                                  | type     | accepted values      | default              |
+| ---------- | ------------------------------------------------------------ | -------- | -------------------- | -------------------- |
+| idKey      | the node's attribute to save node's unique identifier.<br />support chain calls. | string   | —                    | id                   |
+| pIdKey     | the node's attribute to save its parent node's unique identifier.<br />support chain calls. | string   | —                    | parentId             |
+| isKeyChain | whether to enable the chain call of idKey and pIdKey         | boolean  | —                    | true                 |
+| detached   | whether to preserve the node which specifies parent's identifier but the parent node is non-existent.<br />if set true, the node keep as root node.<br />if set false, the node will be abandoned and output error message to console. | boolean  | —                    | true                 |
+| sortKey    | the node's attribute to save node's sort value.              | string   | —                    | ''                   |
+| order      | specify the sort type.<br />works when `sortKey` is specified. | string   | ascending/descending | ascending            |
+| traverse   | traverse all nodes.<br />parent is null when it has no parent. | function | —                    | (node, parent) => {} |
+
+`treeToArray(tree, [options])`
+
+```javascript
+treeToArray(tree, {
+  childrenKey
+})
+```
+
+
+
+**options**
+
+| name        | description                                                | type   | accepted values | default  |
+| ----------- | ---------------------------------------------------------- | ------ | --------------- | -------- |
+| childrenKey | specify which node attribute is used as the node's subtree | string | —               | children |
+
+## License
+
+MIT

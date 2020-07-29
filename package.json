@@ -1,5 +1,6 @@
 {
   "name": "tree-with-array",
+  "description": "Conversion between tree data and array data",
   "version": "1.0.0",
   "main": "dist/tree-with-array.cjs.js",
   "module": "dist/tree-with-array.esm.js",
@@ -31,5 +32,13 @@
   ],
   "author": "LoryHuang",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hzmming/tree-with-array.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hzmming/tree-with-array/issues"
+  },
+  "homepage": "https://github.com/hzmming/tree-with-array#readme",
   "dependencies": {}
 }
