@@ -1,7 +1,7 @@
 {
   "name": "tree-with-array",
   "description": "Conversion between tree data and array data",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/tree-with-array.cjs.js",
   "module": "dist/tree-with-array.esm.js",
   "browser": "dist/tree-with-array.umd.js",
@@ -26,7 +26,12 @@
   "keywords": [
     "tree",
     "array",
-    "list"
+    "list",
+    "collection",
+    "list to tree",
+    "collection to tree",
+    "tree to list",
+    "tree to collection"
   ],
   "author": "LoryHuang",
   "license": "MIT",
